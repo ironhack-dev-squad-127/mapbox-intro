@@ -11,6 +11,7 @@ var map = new mapboxgl.Map({
 // Add zoom and rotation controls to the map.
 map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
+// Add a red marker in Lisbon
 var marker = new mapboxgl.Marker({
   draggable: true,
   color: 'red'
@@ -19,14 +20,13 @@ var marker = new mapboxgl.Marker({
   .addTo(map);
 
 
-var parisMarker = new mapboxgl.Marker({
-  draggable: true,
-  color: 'red'
-})
+// Add a red marker in Paris
+var parisMarker = new mapboxgl.Marker()
   .setLngLat([2.3375929,48.8744254])
   .addTo(map)
 
 
+// Call the API and add has many markers as stations in the response.data
 axios.get('https://api.jcdecaux.com/vls/v1/stations?contract=Lyon&apiKey=31914cb97e2074dd91b0b77c5e6e62d8ea0587f9')
   .then(response => {
     for (let i = 0; i < response.data.length; i++) {
@@ -34,7 +34,7 @@ axios.get('https://api.jcdecaux.com/vls/v1/stations?contract=Lyon&apiKey=31914cb
       const percentage = response.data[i].available_bikes / response.data[i].bike_stands
       console.log(i, curPosition, percentage)
       new mapboxgl.Marker({
-        color: `rgb(255, ${255*percentage}, ${255*percentage})`
+        color: `rgb(${255-255*percentage}, ${255*percentage}, 0)`
       })
         .setLngLat([curPosition.lng,curPosition.lat])
         .addTo(map)
